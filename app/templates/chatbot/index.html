@@ -1,0 +1,74 @@
+{% extends 'home/index.html' %}
+{% load static %}
+
+{% block head %}
+<meta name="csrf-token" content="{{ csrf_token }}">
+{% endblock %}
+
+{% block title %}ALICEchat{% endblock %}
+{% block try-content %}{% endblock %}
+{% block animation_elements %}{% endblock %}
+{% block logo-movie %}{% endblock %}
+{% block about-content %}{% endblock %}
+
+
+{% block input_container %}
+<div class="message-container" style="margin-top: 26vh;">
+    {% if message %}
+        <div class="user-message-bubble">
+            {{ message }}
+        </div>
+    {% endif %}
+</div>
+{{ block.super }}
+{% endblock %}
+
+{% block analysis-result %}
+<div id="loading-spinner" class="spinner" style="display: none;">
+    <div class="spinner-icon"></div>
+</div>
+
+<div id="analysis-result" class="analysis-result" style="display: flex; flex-direction: column; align-items: center; margin-top: 5%;">
+    <div class="card-container" style="position: relative; width: 24%; margin: 0 auto;">
+        <div class="clover-wrapper" style="display: flex; align-items: center; justify-content: center; margin-bottom: 10px;">
+            <div class="clover-cnt">
+                <p style="background-color: #ffffcacf; word-wrap: break-word; font-weight: bold; color: red; font-size: 19px;;">머신러닝 모델 개방 요청 허가가 완료되지 않아, <br> 
+                    ※ 현재 모델이 작동되지 않습니다.</p>
+            </div>
+            {% if result %}
+                <div class="clover-container" style="display: flex;">
+                    {% for _ in range %}
+                        <img src="{% static 'images/clover.png' %}" class="clover-img" style="width: 27px; margin-left: 5px;">
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div id="alice_card_content" class="alice_card_content">
+            <div id="card_text" class="card-text">
+            "{{ card_texts }}"
+            </div>
+            <img src="{% static 'images/Alice_card.png' %}" id="card_img" class="alice_card_img" style="width: 100%;">
+        </div>
+    </div>
+    {% if result %}
+        <p style="font-size: 12px; font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;">Click Alice card ▲</p>
+        <div style="display: flex; align-items: center; margin-top: 7%; margin-bottom: 4%;">
+            <p style="margin: 0; font-size: 14px; font-style: italic; font-weight: 700;">클래스 예측 확률:</p>
+            <strong style="background-color: #ffffa2bf; font-size: 24px; margin-left: 10px;">{{ max_val }}</strong>
+        </div>
+        <div id="result-container" class="result-container" style="margin-top: 20px; text-align: center; width: 100%; padding-left: 45%;">
+            {% if lime_explainer %}
+                <div class="lime_explainer">
+                    {{ lime_explainer|safe }}
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}
+
+{% block footer-section %}
+{{ block.super }}
+{% endblock %}
