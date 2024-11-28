@@ -299,7 +299,16 @@
             });
 
             function copyToClipboard(element) {
-                const email = element.getAttribute("data-email");
+            const email = element.getAttribute("data-email");
+
+            // 데이터 확인
+            if (!email) {
+                alert("Email address not found!");
+                return;
+            }
+
+            // HTTPS 환경에서 navigator.clipboard 사용
+            if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(email)
                     .then(() => {
                         alert(`E-mail copied to Clipboard!`);
@@ -308,7 +317,24 @@
                         console.error("Failed to copy E-mail:", error);
                         alert("Failed to copy E-mail. Please try again.");
                     });
+            } else {
+                // HTTPS가 아닌 경우 fallback
+                const textarea = document.createElement("textarea");
+                textarea.value = email;
+                document.body.appendChild(textarea);
+                textarea.select();
+
+                try {
+                    document.execCommand("copy");
+                    alert(`E-mail copied to Clipboard!`);
+                } catch (error) {
+                    console.error("Fallback: Failed to copy E-mail:", error);
+                    alert("Fallback: Failed to copy E-mail. Please try again.");
+                }
+
+                document.body.removeChild(textarea);
             }
+        }
         </script>
         
         {% endblock %}
